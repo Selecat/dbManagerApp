@@ -32,13 +32,19 @@ private slots:
 
     void on_pushButtonDialogConnection_clicked();
 
-
     void on_pushButtonClose_clicked();
+
+    void on_pushButtonSwitchDbMode_clicked();
+
+    void on_pushButtonDbServer_clicked();
+
+    void on_pushButtonMonoDb_clicked();
 
 private:
     Ui::DialogConnexion *ui;
 
     QString username, password, databaseName, databaseIP;
+    QString driver;
 };
 
 #endif // DIALOGCONNEXION_H

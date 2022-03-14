@@ -1,6 +1,7 @@
 #include "dialogconnexion.h"
 #include "ui_dialogconnexion.h"
 #include <QSqlDatabase>
+#include <QSqlDriver>
 
 #include <QDebug>
 
@@ -9,6 +10,12 @@ DialogConnexion::DialogConnexion(QWidget *parent) :
     ui(new Ui::DialogConnexion)
 {
     ui->setupUi(this);
+
+    //on dit que le driver par défaut est server
+    driver = "QMYSQL";
+
+    //on cache le bouton à l'ouverture de l'app
+    ui->pushButtonFind->setVisible(false);
 }
 
 DialogConnexion::~DialogConnexion()
@@ -56,18 +63,33 @@ void DialogConnexion::on_pushButtonDialogConnection_clicked()
     databaseIP = ui->lineEditDatabaseIP->text();
     qDebug()<<databaseIP;
 
-    QSqlDatabase db = QSqlDatabase::addDatabase("QMYSQL");
-          db.setHostName(databaseIP);
-          db.setDatabaseName(databaseName);
-          db.setUserName(username);
-          db.setPassword(password);
-          bool ok = db.open();
-          qDebug()<<ok;
+    if(driver == "QMYSQL") {
+        QSqlDatabase db = QSqlDatabase::addDatabase("QMYSQL");
+              db.setHostName(databaseIP);
+              db.setDatabaseName(databaseName);
+              db.setUserName(username);
+              db.setPassword(password);
+              bool ok = db.open();
+              qDebug()<<ok;
 
-    if (ok)
-        accept();
-    else
-    ui->labelError->setText("An error has occurred !");
+              if (ok)
+                  accept();
+              else
+              ui->labelError->setText("An error has occurred !");
+    }
+
+    if(driver == "QSQLITE") {
+        QSqlDatabase db = QSqlDatabase::addDatabase("QSQLITE");
+              db.setDatabaseName(databaseName);
+              bool ok = db.open();
+              qDebug()<<ok;
+
+              if (ok)
+                  accept();
+              else
+              ui->labelError->setText("An error has occurred !");
+    }
+
 }
 
 
@@ -75,5 +97,40 @@ void DialogConnexion::on_pushButtonDialogConnection_clicked()
 void DialogConnexion::on_pushButtonClose_clicked()
 {
     close();
+}
+
+
+void DialogConnexion::on_pushButtonDbServer_clicked()
+{
+    ui->lineEditDialogUsername->setVisible(true);
+    ui->labelDialogUsername->setVisible(true);
+    ui->lineEditDialogPassword->setVisible(true);
+    ui->labelDialogPassword->setVisible(true);
+    ui->lineEditDialogDatabaseName->setVisible(true);
+    ui->labelDialogDatabaseName->setVisible(true);
+    ui->lineEditDatabaseIP->setVisible(true);
+    ui->labelDialogDatabaseIP->setVisible(true);
+    ui->pushButtonFind->setVisible(false);
+
+    driver = "QMYSQL";
+}
+
+
+void DialogConnexion::on_pushButtonMonoDb_clicked()
+{
+    ui->lineEditDialogUsername->setVisible(false);
+    ui->labelDialogUsername->setVisible(false);
+    ui->lineEditDialogPassword->setVisible(false);
+    ui->labelDialogPassword->setVisible(false);
+    ui->lineEditDialogDatabaseName->setVisible(true);
+    ui->labelDialogDatabaseName->setVisible(true);
+    ui->lineEditDatabaseIP->setVisible(false);
+    ui->labelDialogDatabaseIP->setVisible(false);
+    ui->pushButtonFind->setVisible(true);
+
+
+    driver = "QSQLITE";
+
+
 }
 
