@@ -34,11 +34,11 @@ private slots:
 
     void on_pushButtonClose_clicked();
 
-    void on_pushButtonSwitchDbMode_clicked();
-
     void on_pushButtonDbServer_clicked();
 
     void on_pushButtonMonoDb_clicked();
+
+    void on_pushButtonFind_clicked();
 
 private:
     Ui::DialogConnexion *ui;

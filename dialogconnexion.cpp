@@ -2,6 +2,8 @@
 #include "ui_dialogconnexion.h"
 #include <QSqlDatabase>
 #include <QSqlDriver>
+#include <QFile>
+#include <QFileDialog>
 
 #include <QDebug>
 
@@ -63,6 +65,8 @@ void DialogConnexion::on_pushButtonDialogConnection_clicked()
     databaseIP = ui->lineEditDatabaseIP->text();
     qDebug()<<databaseIP;
 
+    qDebug()<<driver;
+
     if(driver == "QMYSQL") {
         QSqlDatabase db = QSqlDatabase::addDatabase("QMYSQL");
               db.setHostName(databaseIP);
@@ -70,7 +74,7 @@ void DialogConnexion::on_pushButtonDialogConnection_clicked()
               db.setUserName(username);
               db.setPassword(password);
               bool ok = db.open();
-              qDebug()<<ok;
+              qDebug()<<"SQL "<<ok;
 
               if (ok)
                   accept();
@@ -82,7 +86,7 @@ void DialogConnexion::on_pushButtonDialogConnection_clicked()
         QSqlDatabase db = QSqlDatabase::addDatabase("QSQLITE");
               db.setDatabaseName(databaseName);
               bool ok = db.open();
-              qDebug()<<ok;
+              qDebug()<<"SQLITE"<<ok;
 
               if (ok)
                   accept();
@@ -91,8 +95,6 @@ void DialogConnexion::on_pushButtonDialogConnection_clicked()
     }
 
 }
-
-
 
 void DialogConnexion::on_pushButtonClose_clicked()
 {
@@ -132,5 +134,12 @@ void DialogConnexion::on_pushButtonMonoDb_clicked()
     driver = "QSQLITE";
 
 
+}
+
+
+void DialogConnexion::on_pushButtonFind_clicked()
+{
+    QString filePath =QFileDialog::getOpenFileName(this, "Choose a database");
+    ui->lineEditDialogDatabaseName->setText(filePath);
 }
 
